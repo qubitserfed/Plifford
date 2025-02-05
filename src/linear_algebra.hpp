@@ -94,4 +94,4 @@ Matrix<Qj>                              adjoint                         (const M
 //template<typename T> constexpr u64      raw_sym_prod_ll                 (const u64 &, const u64&);
 //template<typename T> bool               sym_prod                        (Vector<T>, Vector<T>);
 //template<typename T> Matrix<T>          isotropic_closure               (Matrix<T>);
-
+//template<typename T> Matrix<T>          inv                             (M)
