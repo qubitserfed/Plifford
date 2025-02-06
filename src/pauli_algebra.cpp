@@ -131,3 +131,16 @@ void print(const PauliVect &p) {
         }
     }
 }
+
+// in place operators
+
+PauliVect &PauliVect::operator += (const PauliVect &rhs) {
+    *this = *this + rhs;
+    return *this;
+}
+
+PauliVect &PauliVect::operator *= (const PauliVect &rhs) {
+    *this = *this * rhs;
+    return *this;
+}
+

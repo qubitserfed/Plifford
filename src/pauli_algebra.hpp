@@ -11,6 +11,9 @@ struct PauliVect {
 
     Matrix<Qj> matrix(const PauliVect& p);
 
+    PauliVect &operator += (const PauliVect &rhs);
+    PauliVect &operator *= (const PauliVect &rhs);
+
     PauliVect(int _N);
     PauliVect(const Pauli &pauli);
 };
