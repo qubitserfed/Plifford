@@ -162,10 +162,12 @@ void print(const Pauli& p) {
 
 // in place operators
 
-void Pauli::mulX(int pos) {
-    paulis[pos] = PauliGate::X;
+Pauli Pauli::operator * (Pauli rhs) {
+    *this = *this * rhs;
+    return *this;
 }
 
-void Pauli::mulY(int pos) {
-    paulis[pos] = PauliGate::Y;
+Pauli Pauli::operator * (Qj rhs) {
+    *this = *this * rhs;
+    return *this;
 }
