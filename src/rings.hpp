@@ -6,6 +6,11 @@ typedef unsigned long long u64;
 struct GF2 {
     bool val;
 
+    GF2 &operator += (GF2);
+    GF2 &operator -= (GF2);
+    GF2 &operator *= (GF2);
+    GF2 &operator /= (GF2);
+
     GF2();
     GF2(i64 a);
     GF2(bool a);
@@ -13,6 +18,11 @@ struct GF2 {
 
 struct GF4  {
     bool e1, e2; // represents: e1 + e2 * \alpha where \alpha is the multiplicative group generator of GF4
+
+    GF4 &operator += (GF4);
+    GF4 &operator -= (GF4);
+    GF4 &operator *= (GF4);
+    GF4 &operator /= (GF4);
 
     GF4();
     GF4(i64 a);
@@ -23,6 +33,11 @@ struct GF4  {
 struct Q {
     i64 num, den;
 
+    Q &operator += (Q);
+    Q &operator -= (Q);
+    Q &operator *= (Q);
+    Q &operator /= (Q);
+
     Q();
     Q(i64 a);
     Q(i64 a, i64 b); // a/b
@@ -30,6 +45,11 @@ struct Q {
 
 struct Qj { // Field extension of Q by j (where j is an elementary 8th root of unity)
     Q projs[4]; // represents: projs[0] * 1 + projs[1] * j + projs[2] * j^2 + projs[3] * j^3 + projs[4] * j^4
+
+    Qj &operator += (Qj);
+    Qj &operator -= (Qj);
+    Qj &operator *= (Qj);
+    Qj &operator /= (Qj);
 
     Qj();
     Qj(i64 a);

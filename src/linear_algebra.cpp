@@ -441,14 +441,6 @@ Vector<T> kroeneker(Vector<T> a, Vector<T> b) {
     return res;
 }
 
-/*
-
-template<typename T> Matrix<T>          operator *                      (const T &, Matrix<T>);
-template<typename T> Matrix<T>          operator *                      (Matrix<T>, const T &);
-template<typename T> Matrix<T>          operator /                      (const T &, Matrix<T>);
-template<typename T> Matrix<T>          operator /                      (Matrix<T>, const T &);
-*/
-
 template <typename T>
 Matrix<T> operator * (const T &a, Matrix<T> mat) {
     Matrix<T> res(mat.n, mat.m);

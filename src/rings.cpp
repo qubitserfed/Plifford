@@ -485,3 +485,70 @@ void print_latex(Qj a) {
     }
     std::cout << ')';
 }
+
+// in place operators
+
+GF2 &GF2::operator += (GF2 a) {
+    *this = *this + a;
+}
+
+GF2 &GF2::operator -= (GF2 a) {
+    *this = *this - a;
+}
+
+GF2 &GF2::operator *= (GF2 a) {
+    *this = *this * a;
+}
+
+GF2 &GF2::operator /= (GF2 a) {
+    *this = *this / a;
+}
+
+GF4 &GF4::operator += (GF4 a) {
+    *this = *this + a;
+}
+
+GF4 &GF4::operator -= (GF4 a) {
+    *this = *this - a;
+}
+
+GF4 &GF4::operator *= (GF4 a) {
+    *this = *this * a;
+}
+
+GF4 &GF4::operator /= (GF4 a) {
+    *this = *this / a;
+}
+
+Q &Q::operator += (Q a) {
+    *this = *this + a;
+}
+
+Q &Q::operator -= (Q a) {
+    *this = *this - a;
+}
+
+Q &Q::operator *= (Q a) {
+    *this = *this * a;
+}
+
+Q &Q::operator /= (Q a) {
+    *this = *this / a;
+}
+
+Qj &Qj::operator += (Qj a) {
+    *this = *this + a;
+}
+
+Qj &Qj::operator -= (Qj a) {
+    *this = *this - a;
+}
+
+Qj &Qj::operator *= (Qj a) {
+    *this = *this * a;
+}
+
+Qj &Qj::operator /= (Qj a) {
+    *this = *this / a;
+}
+
