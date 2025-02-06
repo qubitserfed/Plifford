@@ -40,6 +40,31 @@ int Vector<T>::weight() {
     return res;
 }
 
+template <typename T>
+Vector<T> &Vector<T>::operator += (const Vector<T> &a) {
+    *this = *this + a;
+}
+
+template <typename T>
+Vector<T> &Vector<T>::operator -= (const Vector<T> &a) {
+    *this = *this - a;
+}
+
+template <typename T>
+Vector<T> &Vector<T>::operator *= (const T &a) {
+    *this = *this * a;
+}
+
+template <typename T>
+Vector<T> &Vector<T>::operator /= (const T &a) {
+    *this = *this / a;
+}
+
+template <typename T>
+Vector<T> Vector<T>::operator () (int idx) {
+    return Vector<T>(vec[idx]);
+}
+
 // constructor
 template <typename T>
 Vector<T>::Vector() {
@@ -167,6 +192,53 @@ void Matrix<T>::sort_rows() {
         return a.vec < b.vec;
     });
 }
+
+template <typename T>
+Matrix<T> &Matrix<T>::operator += (const Matrix<T> &a) {
+    *this = *this + a;
+}
+
+template <typename T>
+Matrix<T> &Matrix<T>::operator -= (const Matrix<T> &a) {
+    *this = *this - a;
+}
+
+template <typename T>
+Matrix<T> &Matrix<T>::operator *= (const T &a) {
+    *this = *this * a;
+}
+
+template <typename T>
+Matrix<T> &Matrix<T>::operator /= (const T &a) {
+    *this = *this / a;
+}
+
+template <typename T>
+Matrix<T> &Matrix<T>::operator *= (const Matrix<T> &a) {
+    *this = *this * a;
+}
+
+template <typename T>
+Matrix<T> &Matrix<T>::operator += (const T &a) {
+    *this = *this + a;
+}
+
+template <typename T>
+Matrix<T> &Matrix<T>::operator -= (const T &a) {
+    *this = *this - a;
+}
+
+template <typename T>
+Matrix<T> &Matrix<T>::operator /= (const T &a) {
+    *this = *this / a;
+}
+
+template <typename T>
+Vector<T> Matrix<T>::operator () (int i, int j) {
+    return vec[i](j);
+}
+
+// Matrix constructors:
 
 template <typename T>
 Matrix<T>::Matrix() {

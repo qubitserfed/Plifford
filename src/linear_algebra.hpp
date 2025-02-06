@@ -19,6 +19,12 @@ struct Vector {
     void set(int, T);
     int weight();
 
+    Vector<T>& operator += (const Vector<T> &);
+    Vector<T>& operator -= (const Vector<T> &);
+    Vector<T>& operator *= (const T &);
+    Vector<T>& operator /= (const T &);
+    Vector<T>  operator () (int);
+
     Vector();
     Vector(int);
     Vector(std::vector<T>);
@@ -45,6 +51,16 @@ struct Matrix {
     void swap_cols(int, int);
     void remove_zero_rows();
     void sort_rows();
+
+    Matrix<T>& operator += (const Matrix<T> &);
+    Matrix<T>& operator -= (const Matrix<T> &);
+    Matrix<T>& operator *= (const T &);
+    Matrix<T>& operator /= (const T &);
+    Matrix<T>& operator *= (const Matrix<T> &);
+    Matrix<T>& operator += (const T &);
+    Matrix<T>& operator -= (const T &);
+    Matrix<T>& operator /= (const T &);
+    Vector<T>  operator () (int, int);
 
     Matrix();
     Matrix(int, int);
