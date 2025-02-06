@@ -63,9 +63,11 @@ struct Matrix {
     Vector<T>  operator () (int, int);
 
     Matrix();
+    Matrix(int);
     Matrix(int, int);
-    Matrix(std::vector< std::vector<T> >);
-    Matrix(std::vector<Vector<T>>);
+    Matrix(const std::vector< std::vector<T> > &);
+    Matrix(const std::vector<Vector<T>> &);
+    Matrix(const Vector<T> &);
 };
 
 

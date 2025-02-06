@@ -253,11 +253,15 @@ Matrix<T>::Matrix(int n, int m) {
     vec = std::vector< Vector<T> >(n, Vector<T>(m));
 }
 
-//Matrix(std::vector< std::vector<T> >);
-//Matrix(std::vector<Vector<T>>);
+template <typename T>
+Matrix<T>::Matrix(int n) {
+    this->n = n;
+    this->m = n;
+    vec = std::vector< Vector<T> >(n, Vector<T>(n));
+}
 
 template <typename T>
-Matrix<T>::Matrix(std::vector< std::vector<T> > v) {
+Matrix<T>::Matrix(const std::vector< std::vector<T> > &v) {
 #ifdef SAFE
     for (int i = 0; i < v.size(); i++)
         if (v[i].size() != v[0].size())
@@ -272,7 +276,7 @@ Matrix<T>::Matrix(std::vector< std::vector<T> > v) {
 }
 
 template <typename T>
-Matrix<T>::Matrix(std::vector<Vector<T>> v) {
+Matrix<T>::Matrix(const std::vector<Vector<T>> &v) {
 #ifdef SAFE
     for (int i = 0; i < v.size(); i++)
         if (v[i].size() != v[0].size())
@@ -283,6 +287,13 @@ Matrix<T>::Matrix(std::vector<Vector<T>> v) {
     vec.resize(n);
     for (int i = 0; i < n; i++)
         vec[i] = v[i];
+}
+
+template <typename T>
+Matrix<T>::Matrix(const Vector<T> &v) {
+    n = 1;
+    m = v.vec.size();
+    vec = std::vector< Vector<T> >(1, v);
 }
 
 // General Vector Operators
