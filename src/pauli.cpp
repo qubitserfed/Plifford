@@ -159,3 +159,13 @@ void print(const Pauli& p) {
         }
     }
 }
+
+// in place operators
+
+void Pauli::mulX(int pos) {
+    paulis[pos] = PauliGate::X;
+}
+
+void Pauli::mulY(int pos) {
+    paulis[pos] = PauliGate::Y;
+}

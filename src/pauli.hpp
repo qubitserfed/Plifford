@@ -17,6 +17,9 @@ struct Pauli {
 //    void mulY(int pos);
 //    void mulZ(int pos);
 
+    Pauli operator * (Pauli rhs);
+    Pauli operator * (Qj rhs);
+
     Pauli(int _N);
     Pauli(int _N, PauliGate _type, int pos, Qj _phase=1);
     Pauli(int _N, std::vector<PauliGate> _paulis, Qj _phase=1);
