@@ -50,13 +50,13 @@ GF2 operator * (GF2 a, GF2 b) {
 
 GF2 inv(GF2 arg) {
     if (!arg.val)
-        throw "Division by zero";
+        throw std::runtime_error("Division by zero");
     return arg;
 }
 
 GF2 operator / (GF2 a, GF2 b) {
     if (!b.val) {
-        throw "Division by zero";
+        throw std::runtime_error("Division by zero");
     }
     return GF2 {a.val && b.val};
 }
@@ -131,7 +131,7 @@ GF4 operator * (GF4 a, GF4 b) {
 
 GF4 inv(GF4 arg) {
     if (arg.e1 == 0 && arg.e2 == 0)
-        throw "Division by zero";
+        throw std::runtime_error("Division by zero");
     else if (arg.e1 == 1 && arg.e2 == 0)
         return GF4 {1, 0};
     else if (arg.e1 == 0 && arg.e2 == 1)
@@ -139,7 +139,7 @@ GF4 inv(GF4 arg) {
     else if (arg.e1 == 1 && arg.e2 == 1)
         return GF4 {0, 1};
     else
-        throw "Invalid GF4 element";
+        throw std::runtime_error("Invalid GF4 element");
 }
 
 GF4 operator / (GF4 a, GF4 b) {
@@ -225,7 +225,7 @@ Q::Q(i64 a) {
 
 Q::Q(i64 a, i64 b) {
     if (b == 0)
-        throw "Division by zero";
+        throw std::runtime_error("Division by zero");
     i64 g = gcd(a, b);
     num = a / g;
     den = b / g;
@@ -266,7 +266,7 @@ Q operator * (Q a, Q b) {
 
 Q inv(Q a) {
     if (a.num == 0)
-        throw "Division by zero";
+        throw std::runtime_error("Division by zero");
 
     Q tmp = Q {a.den, a.num};
     if (tmp.den < 0) {
@@ -395,12 +395,13 @@ Qj operator / (Qj a, Q b) {
 
 Qj conj(Qj a, int e=7) {
     if (e < 0 || e > 4)
-        throw "Invalid automorphism";
+        throw std::runtime_error("Invalid automorphism");
     Q res[4];
     for (int i = 0; i < 4; i++)
         res[i] = res[i] + a.projs[(i * e) % 4];
     return Qj(res[0], res[1], res[2], res[3]);
 }
+
 Q norm(Qj a) {
     Qj temp = a * conj(a, 3) * conj(a, 5) * conj(a, 7);
     return temp.projs[0];
@@ -414,7 +415,7 @@ Q trace(Qj a) {
 Qj inv(Qj a) {
     Q n = norm(a);
     if (n.num == 0)
-        throw "Division by zero";
+        throw std::runtime_error("Division by zero");
     return conj(a, 3) * conj(a, 5) * conj(a, 7) / n;
 }
 

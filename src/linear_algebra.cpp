@@ -7,13 +7,19 @@
 
 #define SAFE
 
+
+// Utility Functions
+int popcount(u64 arg) {
+    std::bitset<64>(arg).count();
+}
+
 // General Vector Methods
 
 template <typename T>
 T Vector<T>::get(int idx) {
 #ifdef SAFE
     if (idx >= vec.size())
-        throw "Index out of bounds";
+        throw std::runtime_error("Index out of bounds");
 #endif
     return vec[idx];
 }
@@ -65,8 +71,8 @@ Vector<T> &Vector<T>::operator /= (const T &a) {
 }
 
 template <typename T>
-Vector<T> Vector<T>::operator () (int idx) {
-    return Vector<T>(vec[idx]);
+T Vector<T>::operator () (int idx) {
+    return vec[idx];
 }
 
 // constructor
@@ -91,7 +97,7 @@ template <typename T>
 Vector<T> &Matrix<T>::row(int idx) {
 #ifdef SAFE
     if (idx >= n)
-        throw "Index out of bounds";
+        throw std::runtime_error("Index out of bounds");
 #endif
     return vec[idx];
 }
@@ -105,7 +111,7 @@ template <typename T>
 void Matrix<T>::append_row(Vector<T> v) {
 #ifdef SAFE
     if (v.vec.size() != m)
-        throw "Inconsistent row size in append_row";
+        throw std::runtime_error("Inconsistent row size in append_row");
 #endif
     vec.push_back(v);
     n++;
@@ -115,7 +121,7 @@ template <typename T>
 void Matrix<T>::pop_row() {
 #ifdef SAFE
     if (n == 0)
-        throw "Cannot pop from empty matrix";
+        throw std::runtime_error("Cannot pop from empty matrix");
 #endif
     vec.pop_back();
     n--;
@@ -125,7 +131,7 @@ template <typename T>
 void Matrix<T>::set(int i, int j, T val) {
 #ifdef SAFE
     if (i >= n || j >= m)
-        throw "Index out of bounds";
+        throw std::runtime_error("Index out of bounds");
 #endif
     vec[i].set(j, val);
 }
@@ -134,7 +140,7 @@ template <typename T>
 T Matrix<T>::get(int i, int j) {
 #ifdef SAFE
     if (i >= n || j >= m)
-        throw "Index out of bounds";
+        throw std::runtime_error("Index out of bounds");
 #endif
     return vec[i].get(j);
 }
@@ -148,19 +154,32 @@ template <typename T>
 void Matrix<T>::add_rows(int i, int j) {
 #ifdef SAFE
     if (i >= n || j >= n)
-        throw "Index out of bounds";
+        throw std::runtime_error("Index out of bounds");
     if (vec[i].vec.size() != vec[j].vec.size())
-        throw "Inconsistent row size in add_rows";
+        throw std::runtime_error("Inconsistent row size in add_rows");
 #endif
     for (int k = 0; k < m; k++)
         vec[i].set(k, vec[i].get(k) + vec[j].get(k));
+}
+
+
+template <typename T>
+void Matrix<T>::add_rows(int i, int j, T lambda) {
+#ifdef SAFE
+    if (i >= n || j >= n)
+        throw std::runtime_error("Index out of bounds");
+    if (vec[i].vec.size() != vec[j].vec.size())
+        throw std::runtime_error("Inconsistent row size in add_rows");
+#endif
+    for (int k = 0; k < m; k++)
+        vec[i].set(k, vec[i].get(k) * lambda + vec[j].get(k));
 }
 
 template <typename T>
 void Matrix<T>::swap_rows(int i, int j) {
 #ifdef SAFE
     if (i >= n || j >= n)
-        throw "Index out of bounds";
+        throw std::runtime_error("Index out of bounds");
 #endif
     std::swap(vec[i], vec[j]);
 }
@@ -169,7 +188,7 @@ template <typename T>
 void Matrix<T>::swap_cols(int i, int j) {
 #ifdef SAFE
     if (i >= m || j >= m)
-        throw "Index out of bounds";
+        throw std::runtime_error("Index out of bounds");
 #endif
     for (int k = 0; k < n; k++) {
         T ki = vec[k].get(i);
@@ -195,6 +214,23 @@ void Matrix<T>::sort_rows() {
     std::sort(vec.begin(), vec.end(), [](Vector<T> &a, Vector<T> &b) {
         return a.vec < b.vec;
     });
+}
+
+template <typename T>
+std::vector<Vector<T>> Matrix<T>::rows() {
+    std::vector<Vector<T>> res;
+    for (int i = 0; i < n; i++)
+        res.emplace_back(vec[i]);
+    return res;
+}
+
+template <typename T>
+std::vector<Vector<T>> Matrix<T>::columns() {
+    std::vector<Vector<T>> res(m, Vector<T>(n));
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            res[j].set(i, vec[i].get(j));
+    return res;
 }
 
 template <typename T>
@@ -246,7 +282,7 @@ Matrix<T> &Matrix<T>::operator /= (const T &a) {
 }
 
 template <typename T>
-Vector<T> Matrix<T>::operator () (int i, int j) {
+T Matrix<T>::operator () (int i, int j) {
     return vec[i](j);
 }
 
@@ -277,7 +313,7 @@ Matrix<T>::Matrix(const std::vector< std::vector<T> > &v) {
 #ifdef SAFE
     for (int i = 0; i < v.size(); i++)
         if (v[i].size() != v[0].size())
-            throw "Inconsistent row size in Matrix constructor";
+            throw std::runtime_error("Inconsistent row size in Matrix constructor");
 #endif
 
     n = v.size();
@@ -292,7 +328,7 @@ Matrix<T>::Matrix(const std::vector<Vector<T>> &v) {
 #ifdef SAFE
     for (int i = 0; i < v.size(); i++)
         if (v[i].size() != v[0].size())
-            throw "Inconsistent row size in Matrix constructor";
+            throw std::runtime_error("Inconsistent row size in Matrix constructor");
 #endif
     n = v.size();
     m = v[0].vec.size();
@@ -321,7 +357,7 @@ template <typename T>
 Vector<T> operator + (const Vector<T> &a, const Vector<T> &b) {
 #ifdef SAFE
     if (a.vec.size() != b.vec.size())
-        throw "Inconsistent vector size in operator +";
+        throw std::runtime_error("Inconsistent vector size in operator +");
 #endif
     Vector<T> res(a.vec.size());
     for (int i = 0; i < a.vec.size(); i++)
@@ -333,7 +369,7 @@ template <typename T>
 T operator * (const Vector<T> &a, const Vector<T> &b) {
 #ifdef SAFE
     if (a.vec.size() != b.vec.size())
-        throw "Inconsistent vector size in operator *";
+        throw std::runtime_error("Inconsistent vector size in operator *");
 #endif
     T res = 0;
     for (int i = 0; i < a.vec.size(); i++)
@@ -380,7 +416,7 @@ template <typename T>
 Vector<T> operator * (Vector<T> a, Matrix<T> mat) {
 #ifdef SAFE
     if (a.vec.size() != mat.n)
-        throw "Inconsistent vector size in operator *";
+        throw std::runtime_error("Inconsistent vector size in operator *");
 #endif
     Vector<T> res(mat.m);
     for (int i = 0; i < mat.m; i++)
@@ -393,7 +429,7 @@ template <typename T>
 Matrix<T> operator * (Matrix<T> a, Matrix<T> b) {
 #ifdef SAFE
     if (a.m != b.n)
-        throw "Inconsistent matrix size in operator *";
+        throw std::runtime_error("Inconsistent matrix size in operator *");
 #endif
     Matrix<T> res(a.n, b.m);
     for (int i = 0; i < a.n; i++)
@@ -407,7 +443,7 @@ template <typename T>
 Matrix<T> operator + (Matrix<T> a, Matrix<T> b) {
 #ifdef SAFE
     if (a.n != b.n || a.m != b.m)
-        throw "Inconsistent matrix size in operator +";
+        throw std::runtime_error("Inconsistent matrix size in operator +");
 #endif
     Matrix<T> res(a.n, a.m);
     for (int i = 0; i < a.n; i++)
@@ -472,8 +508,217 @@ Matrix<T> operator / (Matrix<T> mat, const T &a) {
     return a / mat;
 }
 
+Matrix<Qj> adjoint(Matrix<Qj> mat) {
+    Matrix<Qj> res = transpose(mat);
+    const int N = res.n;
+    const int M = res.m;
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < M; ++j)
+            res.set(i, j, conj(res.get(i, j), 7));
+    return res;
+}
 
-// Utility Functions
-int popcount(u64 arg) {
-    std::bitset<64>(arg).count();
+// Matrix algorithms
+
+
+// puts the argument matrix in row echelon form and returns the rank of the matrix
+template <typename T>
+int to_row_echelon(Matrix<T> &mat) {
+    int rank = 0;
+    for (int i = 0; i < mat.m; i++) {
+        int pivot = -1;
+        for (int j = rank; j < mat.n; j++) {
+            if (mat.get(j, i) != 0) {
+                pivot = j;
+                break;
+            }
+        }
+        if (pivot == -1)
+            continue;
+        mat.swap_rows(rank, pivot);
+        for (int j = rank + 1; j < mat.n; j++) {
+            T lambda = mat.get(j, i) / mat.get(rank, i);
+            mat.add_rows(j, rank, -lambda);
+        }
+        rank++;
+    }
+    return rank;
+}
+
+template <typename T>
+std::vector<int> restricted_row_echelon(Matrix<T> &mat, std::vector<int> columns) {
+
+}
+
+template <typename T>
+Vector<T> canonical_quotient(Vector<T> v, Matrix<T> &mat) {
+
+}
+
+template <typename T>
+bool in_span (Matrix<T> mat, const Vector<T> &v) {
+    return canonical_quotient(v, mat).is_zero();
+}
+
+template <typename T>
+int rank(Matrix<T> mat) {
+    return to_row_echelon(mat);
+}
+
+template <typename T>
+int det(Matrix<T> mat) {
+    if (mat.n != mat.m)
+        throw std::runtime_error("Determinant of non-square matrix");
+    T res = 1;
+    mat.to_row_echelon();
+    for (int i = 0; i < mat.n; i++)
+        res *= mat.get(i, i);
+    return res;
+}
+
+template <typename T>
+bool is_invertible(Matrix<T> mat) {
+    return mat.n == mat.m && rank(mat) == mat.n;
+}
+
+template <typename T>
+bool is_singular(Matrix<T> mat) {
+    return !is_invertible(mat);
+}
+
+template <typename T>
+Matrix<T> inv(Matrix<T> mat) {
+    if (mat.n != mat.m)
+        throw std::runtime_error("Taking inverse of non-square matrix");
+
+    const int N = mat.n;
+    Matrix<T> tmat(N, 2 * N), res(N, N);
+
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j)
+            tmat.set(i, j, mat.get(i, j));
+        tmat.set(i, i + N, 1);
+    }
+
+    to_row_echelon(tmat);
+    for (int i = 0; i < N; ++i) {
+        T lambda = tmat.get(i, i);
+        if (lambda == 0)
+            throw std::runtime_error("Matrix is singular");
+        for (int j = 0; j < N; ++j)
+            tmat.set(i, j, tmat.get(i, j) / lambda);
+    }
+
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < N; ++j)
+            res.set(i, j, mat.get(i, j + N));
+    return res;
+}
+
+// computes A*B^T
+template <typename T>
+Matrix<T> transposed_product(const Matrix<T> &a, const Matrix<T> &b) {
+    Matrix res(a.n, b.n);
+    for (int i = 0; i < a.n; i++)
+        for (int j = 0; j < b.n; j++)
+            for (int k = 0; k < a.m; k++)
+                res.set(i, j, res.get(i, j) + a.get(i, k) * b.get(j, k));
+    return res;
+}
+
+
+// computes A*v^T
+template <typename T>
+Vector<T> transposed_product(const Matrix<T> &a, const Vector<T> &b) { // same as a*b tho
+    Vector<T> res(a.n);
+    for (int i = 0; i < a.n; i++)
+        for (int j = 0; j < a.m; j++)
+            res.vec[i] += a.get(i, j) * b.vec[j];
+    return res;
+}
+
+template<typename T>
+Matrix<T> basis_completion(Matrix<T> mat) {
+    const int N = mat.n;
+    const int M = mat.m;
+    int rank = to_row_echelon();
+
+    Matrix<T> res(N, M - rank);
+    std::set<int> pivot_columns;
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < M; ++j) {
+            if (mat.get(i, j) != 0) {
+                pivot_columns.insert(j);
+                break;
+            }
+        }
+    }
+
+    assert( pivot_columns.size() == rank );
+    
+    int ptr = 0;
+    for (int j = 0; j < M; ++j) {
+        if (pivot_columns.find(j) == pivot_columns.end()) {
+            res.set(ptr, j, 1);
+            ++ptr;
+        }
+    }
+
+    return res;
+}
+
+template<typename T>
+T sym_prod(Vector<T> a, Vector<T> b) {
+    if (a.vec.size() != b.vec.size())
+        throw std::runtime_error("Inconsistent vector size in sym_prod");
+    if (a.vec.size() % 2 == 1)
+        throw std::runtime_error("Symmetric product of odd size vectors");
+
+    T res = 0;
+    for (int i = 0; i < a.vec.size(); i+= 2)
+        res += a.vec[i] * b.vec[i + 1] - a.vec[i + 1] * b.vec[i];
+    return res;
+}
+
+/*
+    Given an isotropic subspace A of T^n spanned by the rows of a matrix, this function
+    returns a matrix whose rows span a subspace B of T^n such that A + B is the symplectic orthogonal complement of A
+    and A and B intersect trivially. In particular, if the rows of the input matrix are the stabiliizers of some
+    stabilizer code, the rows of the output matrix will span the logical operators of the code.
+*/
+//template<typename T>
+//Matrix<T> isotropic_completion(Matrix<T> basis) {
+//    std::vector<Vector<T>> rows = basis.rows();
+//}
+
+template<typename T>
+Matrix<T> symplectic_complement(const Matrix<T> &basis_mat) {
+    const int N = basis.m;
+    if (N % 2 == 1)
+        throw std::runtime_error("Symplectic complement of odd size subspace");
+
+    std::vector< Vector<T> > basis = basis_mat.rows();
+
+    Matrix<T> res = identity(N);
+
+    for (int i = 0; i < res.size(); ++i) {
+        bool commuting = true;
+        for (const auto &bv: basis) {
+            if (sym_prod(res.row(i), bv) != 0) {
+                for (int j = i + 1; j < res.size(); ++j) {
+                    if (sym_prod(res.row(j), bv) != 0)
+                        res.add_rows(i, j);
+                }
+                commuting = false;
+                break;
+            }
+            if (!commuting){
+                res.swap_cols(i, N - 1);
+                res.pop_row();
+                i-= 1;
+            }
+        }
+    }
+
+    return res;
 }

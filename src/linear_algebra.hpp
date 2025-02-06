@@ -23,7 +23,7 @@ struct Vector {
     Vector<T>& operator -= (const Vector<T> &);
     Vector<T>& operator *= (const T &);
     Vector<T>& operator /= (const T &);
-    Vector<T>  operator () (int);
+    T  operator () (int);
 
     Vector();
     Vector(int);
@@ -47,10 +47,14 @@ struct Matrix {
     bool empty();
 
     void add_rows(int, int);
+    void add_rows(int, int, T);
     void swap_rows(int, int);
     void swap_cols(int, int);
     void remove_zero_rows();
     void sort_rows();
+
+    std::vector<Vector<T>> rows();
+    std::vector<Vector<T>> columns();
 
     Matrix<T>& operator += (const Matrix<T> &);
     Matrix<T>& operator -= (const Matrix<T> &);
@@ -60,7 +64,7 @@ struct Matrix {
     Matrix<T>& operator += (const T &);
     Matrix<T>& operator -= (const T &);
     Matrix<T>& operator /= (const T &);
-    Vector<T>  operator () (int, int);
+    T  operator () (int, int);
 
     Matrix();
     Matrix(int);
@@ -85,7 +89,7 @@ template<typename T> Vector<T>          kroeneker                       (Vector<
 
 // General Matrix Operators
 template<typename T> void               print                           (Matrix<T>);
-template<typename T> void               print_latex                     (Matrix<T>);
+//template<typename T> void               print_latex                     (Matrix<T>);
 template<typename T> Matrix<T>          transpose                       (Matrix<T> &);
 template<typename T> Vector<T>          operator *                      (Vector<T>, Matrix<T>);
 template<typename T> Matrix<T>          operator *                      (Matrix<T>, Matrix<T>);
@@ -100,16 +104,22 @@ template<typename T> Matrix<T>          operator /                      (Matrix<
 // Specialized Matrix Operators
 Matrix<Qj>                              adjoint                         (const Matrix<Qj> &);
 
-
 // Linear Algebraic Algorithms
-//template<typename T> int                to_row_echelon                  (Matrix<T> &);
-//template<typename T> std::vector<int>   restricted_row_echelon          (Matrix<T> &, std::vector<int>);
-//template<typename T> Vector<T>          canonical_quotient              (Vector<T>, Matrix<T> &);
-//template<typename T> bool               in_span                         (Matrix<T>, const Vector<T> &);
-//template<typename T> Matrix<T>          transposed_product              (Matrix<T> &, Matrix<T> &);
-//template<typename T> Vector<T>          transposed_product              (const Vector<T> &, Matrix<T> &);
-//template<typename T> Matrix<T>          basis_completion                (Matrix<T>);
-//template<typename T> constexpr u64      raw_sym_prod_ll                 (const u64 &, const u64&);
-//template<typename T> bool               sym_prod                        (Vector<T>, Vector<T>);
-//template<typename T> Matrix<T>          isotropic_closure               (Matrix<T>);
-//template<typename T> Matrix<T>          inv                             (M)
+template<typename T> int                to_row_echelon                  (Matrix<T> &);
+template<typename T> std::vector<int>   restricted_row_echelon          (Matrix<T> &, std::vector<int>);
+template<typename T> Vector<T>          canonical_quotient              (Vector<T>, Matrix<T> &);
+template<typename T> bool               in_span                         (Matrix<T>, const Vector<T> &);
+
+template<typename T> int                rank                            (Matrix<T>);
+template<typename T> T                  det                             (Matrix<T>);
+template<typename T> bool               is_invertible                   (Matrix<T>);
+template<typename T> bool               is_singular                     (Matrix<T>);
+template<typename T> Matrix<T>          inv                             (Matrix<T>);
+
+template<typename T> Matrix<T>          transposed_product              (const Matrix<T> &, const Matrix<T> &);
+template<typename T> Vector<T>          transposed_product              (const Matrix<T> &, const Vector<T> &);
+
+template<typename T> Matrix<T>          basis_completion                (Matrix<T>);
+template<typename T> T                  sym_prod                        (Vector<T>, Vector<T>);
+template<typename T> Matrix<T>          symplectic_complement           (const Matrix<T> &);
+//template<typename T> Matrix<T>          isotropic_completion            (const Matrix<T> &);
