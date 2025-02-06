@@ -162,12 +162,12 @@ void print(const Pauli& p) {
 
 // in place operators
 
-Pauli Pauli::operator * (Pauli rhs) {
+Pauli &Pauli::operator *= (Pauli rhs) {
     *this = *this * rhs;
     return *this;
 }
 
-Pauli Pauli::operator * (Qj rhs) {
+Pauli &Pauli::operator *= (Qj rhs) {
     *this = *this * rhs;
     return *this;
 }

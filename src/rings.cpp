@@ -490,65 +490,81 @@ void print_latex(Qj a) {
 
 GF2 &GF2::operator += (GF2 a) {
     *this = *this + a;
+    return *this;
 }
 
 GF2 &GF2::operator -= (GF2 a) {
     *this = *this - a;
+    return *this;
 }
 
 GF2 &GF2::operator *= (GF2 a) {
     *this = *this * a;
+    return *this;
 }
 
 GF2 &GF2::operator /= (GF2 a) {
     *this = *this / a;
+    return *this;
 }
 
 GF4 &GF4::operator += (GF4 a) {
     *this = *this + a;
+    return *this;
 }
 
 GF4 &GF4::operator -= (GF4 a) {
     *this = *this - a;
+    return *this;
 }
 
 GF4 &GF4::operator *= (GF4 a) {
     *this = *this * a;
+    return *this;
 }
 
 GF4 &GF4::operator /= (GF4 a) {
     *this = *this / a;
+    return *this;
 }
 
 Q &Q::operator += (Q a) {
     *this = *this + a;
+    return *this;
 }
 
 Q &Q::operator -= (Q a) {
     *this = *this - a;
+    return *this;
 }
 
 Q &Q::operator *= (Q a) {
     *this = *this * a;
+    return *this;
 }
 
 Q &Q::operator /= (Q a) {
     *this = *this / a;
+    return *this;
 }
 
 Qj &Qj::operator += (Qj a) {
     *this = *this + a;
+    return *this;
 }
 
 Qj &Qj::operator -= (Qj a) {
     *this = *this - a;
+    return *this;
 }
 
 Qj &Qj::operator *= (Qj a) {
     *this = *this * a;
+    return *this;
 }
 
 Qj &Qj::operator /= (Qj a) {
     *this = *this / a;
+    return *this;
 }
 
