@@ -13,9 +13,9 @@ struct Pauli {
     std::vector<PauliGate> paulis;
     Qj phase;
     
-    void mulX(int pos);
-    void mulY(int pos);
-    void mulZ(int pos);
+//    void mulX(int pos);
+//    void mulY(int pos);
+//    void mulZ(int pos);
 
     Pauli(int _N);
     Pauli(int _N, PauliGate _type, int pos, Qj _phase=1);
