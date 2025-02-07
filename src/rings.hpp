@@ -133,9 +133,9 @@ bool    operator <  (Qj, Qj);
 void    print       (Qj);
 void    print_latex (Qj);
 
-const Qj J = Qj(Q(0, 1), Q(1, 1), Q(0, 1), Q(0, 1));
-const Qj I = J * J;
-const Qj sqrt2 = (I - Qj(1)) * J;
+const Qj J = Qj(0, 1, 0, 0);
+const Qj I = Qj(0, 0, 1, 0);
+//const Qj sqrt2 = (I - Qj(1)) * J;
 
 
 // J = (I + 1) / sqrt 2

@@ -21,7 +21,7 @@ T Vector<T>::get(int idx) {
     if (idx >= vec.size())
         throw std::runtime_error("Index out of bounds");
 #endif
-    return vec[idx];
+    return vec.at(idx);
 }
 
 template <typename T>
@@ -142,7 +142,7 @@ T Matrix<T>::get(int i, int j) {
     if (i >= n || j >= m)
         throw std::runtime_error("Index out of bounds");
 #endif
-    return vec[i].get(j);
+    return vec.at(i).at(j);
 }
 
 template <typename T>
@@ -404,7 +404,7 @@ void print(Matrix<T> mat) {
 }
 
 template <typename T>
-Matrix<T> transpose(Matrix<T> &mat) {
+Matrix<T> transpose(const Matrix<T> &mat) {
     Matrix<T> res(mat.m, mat.n);
     for (int i = 0; i < mat.n; i++)
         for (int j = 0; j < mat.m; j++)
@@ -449,6 +449,28 @@ Matrix<T> operator + (Matrix<T> a, Matrix<T> b) {
     for (int i = 0; i < a.n; i++)
         for (int j = 0; j < a.m; j++)
             res.set(i, j, a.get(i, j) + b.get(i, j));
+    return res;
+}
+
+template <typename T>
+Matrix<T> operator - (const Matrix<T> &a, const Matrix<T> &b) {
+#ifdef SAFE
+    if (a.n != b.n || a.m != b.m)
+        throw std::runtime_error("Inconsistent matrix size in operator -");
+#endif
+    Matrix<T> res(a.n, a.m);
+    for (int i = 0; i < a.n; i++)
+        for (int j = 0; j < a.m; j++)
+            res.set(i, j, a.get(i, j) - b.get(i, j));
+    return res;
+}
+
+template <typename T>
+Matrix<T> operator - (const Matrix<T> &a) {
+    Matrix<T> res(a.n, a.m);
+    for (int i = 0; i < a.n; i++)
+        for (int j = 0; j < a.m; j++)
+            res.set(i, j, -a.get(i, j));
     return res;
 }
 
@@ -508,7 +530,7 @@ Matrix<T> operator / (Matrix<T> mat, const T &a) {
     return a / mat;
 }
 
-Matrix<Qj> adjoint(Matrix<Qj> mat) {
+Matrix<Qj> adjoint(const Matrix<Qj> &mat) {
     Matrix<Qj> res = transpose(mat);
     const int N = res.n;
     const int M = res.m;
@@ -517,6 +539,18 @@ Matrix<Qj> adjoint(Matrix<Qj> mat) {
             res.set(i, j, conj(res.get(i, j), 7));
     return res;
 }
+
+Qj hilbert_schmidt(const Matrix<Qj> &a, const Matrix<Qj> &b) {
+    const Matrix<Qj> bT = adjoint(b);
+    Qj res;
+
+    for (int i = 0; i < a.n; ++i)
+        for (int j = 0; j < a.m; ++j)
+            res+= a.vec.at(i).at(j) * bT.vec.at(i).at(j);
+
+    return res;
+}
+
 
 // Matrix algorithms
 
@@ -536,7 +570,9 @@ int to_row_echelon(Matrix<T> &mat) {
         if (pivot == -1)
             continue;
         mat.swap_rows(rank, pivot);
-        for (int j = rank + 1; j < mat.n; j++) {
+        for (int j = 0; j < mat.n; j++) {
+            if (j == rank)
+                continue;
             T lambda = mat.get(j, i) / mat.get(rank, i);
             mat.add_rows(j, rank, -lambda);
         }
@@ -547,12 +583,54 @@ int to_row_echelon(Matrix<T> &mat) {
 
 template <typename T>
 std::vector<int> restricted_row_echelon(Matrix<T> &mat, std::vector<int> columns) {
+    std::vector<int> res;
+    int rank = 0;
 
+    for (int jj = 0; jj < columns.size(); ++jj) {
+        int j = columns[jj];
+
+        int pivot = -1;
+        for (int i = rank; i < mat.n; i++) {
+            if (mat.get(i, j) != 0) {
+                res.push_back(j);
+                pivot = i;
+                break;
+            }
+        }
+
+        if (pivot == -1)
+            continue;
+        
+        mat.swap_rows(rank, pivot);
+        for (int i = 0; i < mat.n; i++) {
+            if (i == rank)
+                continue;
+            T lambda = mat.get(i, j) / mat.get(rank, j);
+            mat.add_rows(i, rank, -lambda);
+        }
+        rank++;
+    }
+    
+    return res;
 }
 
-template <typename T>
-Vector<T> canonical_quotient(Vector<T> v, Matrix<T> &mat) {
+/*
 
+*/
+template <typename T>
+Vector<T> canonical_quotient(Vector<T> v, const Matrix<T> &mat) {
+    const int N = mat.n;
+    const int M = mat.m;
+
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < M; ++j) if (mat.get(i, j)) {
+            if (v[j] != 0)
+                v-= mat.row(i) * mat.get(i, j) * v[j];
+            break;
+        }
+    }
+
+    return res;
 }
 
 template <typename T>
@@ -566,13 +644,23 @@ int rank(Matrix<T> mat) {
 }
 
 template <typename T>
-int det(Matrix<T> mat) {
+T det(Matrix<T> mat) {
     if (mat.n != mat.m)
         throw std::runtime_error("Determinant of non-square matrix");
     T res = 1;
     mat.to_row_echelon();
     for (int i = 0; i < mat.n; i++)
         res *= mat.get(i, i);
+    return res;
+}
+
+template <typename T>
+T trace(Matrix<T> mat) {
+    if (mat.n != mat.m)
+        throw std::runtime_error("Trace of non-square matrix");
+    T res = 0;
+    for (int i = 0; i < mat.n; i++)
+        res += mat.get(i, i);
     return res;
 }
 

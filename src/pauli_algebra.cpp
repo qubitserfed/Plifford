@@ -32,6 +32,8 @@ int pauli_to_index(const Pauli &p) {
     return index;
 }
 
+
+
 Pauli index_to_pauli(int index, int N) {
     Pauli p(N);
     for (int i = 0; i < N; ++i) {
@@ -54,6 +56,19 @@ Pauli index_to_pauli(int index, int N) {
     return p;
 }
 
+bool is_power_of_two(int n) {
+    return (n & (n - 1)) == 0;
+}
+
+int log2(int n) { // optimizable
+    int result = 0;
+    while (n > 0) {
+        ++result;
+        n/= 2;
+    }
+    return result;
+}
+
 // PauliVect constructors:
 
 PauliVect::PauliVect(int _N) {
@@ -67,6 +82,32 @@ PauliVect::PauliVect(const Pauli &p) {
 
     paulis[pauli_to_index(p)] = 1;
 }
+
+PauliVect::PauliVect(const Matrix<Qj> &mat) {
+    if (!is_power_of_two(mat.n) || mat.n != mat.m) {
+        throw std::invalid_argument("Matrix must be square and have a power of two dimensions");
+    }
+    N = log2(mat.n);
+
+    for (int i = 0; i < (1 << N); ++i) {
+        for (int j = 0; j < (1 << N); ++j) {
+            PauliVect versor = index_to_pauli(i, N);
+            paulis[i] = hilbert_schmidt(mat, versor.matrix());
+        }
+    }
+}
+
+// PauliVect methods:
+
+Matrix<Qj> PauliVect::matrix() {
+    Matrix<Qj> res(1 << N, 1 << N);
+    for (int i = 0; i < (1 << N); ++i) {
+        res+= paulis[i] * index_to_pauli(i, N).matrix();
+    }
+    return res;
+}
+
+// PauliVect operators:
 
 PauliVect operator * (const PauliVect &lhs, const PauliVect &rhs) { // Test, for the love of God
     std::vector<int> non_zero_lhs, non_zero_rhs;
@@ -116,6 +157,21 @@ PauliVect operator + (const PauliVect &lhs, const PauliVect &rhs) {
     for (int i = 0; i < lhs.paulis.size(); ++i) {
         result.paulis[i] = lhs.paulis[i] + rhs.paulis[i];
     }
+    return result;
+}
+
+PauliVect operator - (const PauliVect &lhs, const PauliVect &rhs) {
+    PauliVect result(lhs.N);
+    for (int i = 0; i < lhs.paulis.size(); ++i) {
+        result.paulis[i] = lhs.paulis[i] - rhs.paulis[i];
+    }
+    return result;
+}
+
+PauliVect operator - (const PauliVect &p) {
+    PauliVect result(p.N);
+    for (int i = 0; i < p.paulis.size(); ++i)
+        result.paulis[i] = -p.paulis[i];
     return result;
 }
 

@@ -90,10 +90,12 @@ template<typename T> Vector<T>          kroeneker                       (Vector<
 // General Matrix Operators
 template<typename T> void               print                           (Matrix<T>);
 //template<typename T> void               print_latex                     (Matrix<T>);
-template<typename T> Matrix<T>          transpose                       (Matrix<T> &);
+template<typename T> Matrix<T>          transpose                       (const Matrix<T> &);
 template<typename T> Vector<T>          operator *                      (Vector<T>, Matrix<T>);
 template<typename T> Matrix<T>          operator *                      (Matrix<T>, Matrix<T>);
 template<typename T> Matrix<T>          operator +                      (Matrix<T>, Matrix<T>);
+template<typename T> Matrix<T>          operator -                      (const Matrix<T> &, const Matrix<T> &);
+template<typename T> Matrix<T>          operator -                      (const Matrix<T> &);
 template<typename T> Matrix<T>          identity                        (const int &);
 template<typename T> Matrix<T>          zero                            (const int &, const int &);
 template<typename T> Matrix<T>          kroeneker                       (Matrix<T>, Matrix<T>);
@@ -103,6 +105,7 @@ template<typename T> Matrix<T>          operator /                      (Matrix<
 
 // Specialized Matrix Operators
 Matrix<Qj>                              adjoint                         (const Matrix<Qj> &);
+Qj                                      hilbert_schmidt                 (const Matrix<Qj> &, const Matrix<Qj> &);
 
 // Linear Algebraic Algorithms
 template<typename T> int                to_row_echelon                  (Matrix<T> &);
@@ -112,6 +115,7 @@ template<typename T> bool               in_span                         (Matrix<
 
 template<typename T> int                rank                            (Matrix<T>);
 template<typename T> T                  det                             (Matrix<T>);
+template<typename T> T                  trace                           (Matrix<T>);
 template<typename T> bool               is_invertible                   (Matrix<T>);
 template<typename T> bool               is_singular                     (Matrix<T>);
 template<typename T> Matrix<T>          inv                             (Matrix<T>);

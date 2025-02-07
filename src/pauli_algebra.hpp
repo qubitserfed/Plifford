@@ -9,13 +9,14 @@ struct PauliVect {
     int N;
     std::vector<Qj> paulis;
 
-    Matrix<Qj> matrix(const PauliVect& p);
+    Matrix<Qj> matrix();
 
     PauliVect &operator += (const PauliVect &rhs);
     PauliVect &operator *= (const PauliVect &rhs);
 
     PauliVect(int _N);
     PauliVect(const Pauli &pauli);
+    PauliVect(const Matrix<Qj> &m);
 };
 
 PauliVect operator * (const PauliVect& lhs, const PauliVect& rhs);
@@ -25,5 +26,8 @@ PauliVect operator * (const PauliVect& lhs, const Qj& rhs);
 PauliVect operator * (const Qj& lhs, const PauliVect& rhs);
 
 PauliVect operator + (const PauliVect &lhs, const PauliVect &rhs);
+PauliVect operator - (const PauliVect &lhs, const PauliVect &rhs);
+PauliVect operator - (const PauliVect &p);
 
 void print(const PauliVect &p);
+
