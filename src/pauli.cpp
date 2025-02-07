@@ -85,8 +85,7 @@ Pauli operator * (Pauli lhs, Qj rhs) {
     return rhs * lhs;
 }
 
-Matrix<Qj> Pauli::matrix(const Pauli& p) {
-    const int N = p.N;
+Matrix<Qj> Pauli::matrix() {
     const int matN = 1 << N;
 
     Matrix<Qj> X = Matrix<Qj>({
@@ -111,7 +110,7 @@ Matrix<Qj> Pauli::matrix(const Pauli& p) {
 
     std::vector< Matrix<Qj> > small_paulis(N);
     for (int i = 0; i < N; ++i) {
-        switch (p.paulis[i]) {
+        switch (paulis[i]) {
             case PauliGate::I:
                 small_paulis[i] = I2;
                 break;
@@ -126,6 +125,7 @@ Matrix<Qj> Pauli::matrix(const Pauli& p) {
                 break;
         }
     }
+
     Matrix<Qj> res = identity<Qj>(matN);
     for (int i = 0; i < matN; i++) {
         for (int j = 0; j < matN; ++j) {
@@ -137,7 +137,7 @@ Matrix<Qj> Pauli::matrix(const Pauli& p) {
         }
     }
 
-    return res * p.phase;
+    return res * phase;
 }
 
 void print(const Pauli& p) {

@@ -24,7 +24,7 @@ struct Pauli {
     Pauli(int _N, PauliGate _type, int pos, Qj _phase=1);
     Pauli(int _N, std::vector<PauliGate> _paulis, Qj _phase=1);
 
-    Matrix<Qj> matrix(const Pauli& p);
+    Matrix<Qj> matrix();
 };
 
 Pauli X(int n, int pos);
